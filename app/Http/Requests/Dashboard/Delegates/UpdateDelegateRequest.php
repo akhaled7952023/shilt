@@ -32,7 +32,7 @@ class UpdateDelegateRequest extends FormRequest
         return [
             'delegate_code' => ['required', 'string', 'max:20', Rule::unique('delegates', 'delegate_code')->ignore($delegate)],
             'name'          => ['required', 'string', 'max:150'],
-            'national_id'   => ['nullable', 'string', 'max:20', Rule::unique('delegates', 'national_id')->ignore($delegate)],
+            'national_id'   => ['nullable', 'string', 'max:20', Rule::unique('delegates', 'national_id')->where('platform_id', $this->input('platform_id'))->ignore($delegate)],
             'phone'         => ['nullable', 'string', 'max:20'],
             'city_id'       => ['nullable', 'integer', 'exists:cities,id'],
             'platform_id'   => ['nullable', 'integer', 'exists:platforms,id'],
