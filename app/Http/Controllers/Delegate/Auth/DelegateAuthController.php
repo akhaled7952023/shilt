@@ -26,7 +26,7 @@ class DelegateAuthController extends Controller
             'password.required'  => __('portal.val_password_required'),
         ]);
 
-        $throttleKey = 'portal-login:' . $request->ip();
+        $throttleKey = 'portal-login:' . sha1(strtolower($request->input('driver_id')) . '|' . $request->ip());
         $maxAttempts = (int) (\App\Models\SystemSetting::get('portal_max_login_attempts') ?? 5);
         $lockMinutes = (int) (\App\Models\SystemSetting::get('portal_lockout_minutes') ?? 30);
 
