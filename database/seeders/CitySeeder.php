@@ -1,0 +1,116 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\City;
+use Illuminate\Database\Seeder;
+
+class CitySeeder extends Seeder
+{
+    public function run(): void
+    {
+        $cities = [
+            ['ar' => 'الرياض',          'en' => 'Riyadh'],
+            ['ar' => 'جدة',              'en' => 'Jeddah'],
+            ['ar' => 'مكة المكرمة',     'en' => 'Makkah'],
+            ['ar' => 'المدينة المنورة', 'en' => 'Madinah'],
+            ['ar' => 'الدمام',           'en' => 'Dammam'],
+            ['ar' => 'الخبر',            'en' => 'Khobar'],
+            ['ar' => 'الظهران',          'en' => 'Dhahran'],
+            ['ar' => 'الجبيل',           'en' => 'Jubail'],
+            ['ar' => 'الطائف',           'en' => 'Taif'],
+            ['ar' => 'تبوك',             'en' => 'Tabuk'],
+            ['ar' => 'أبها',             'en' => 'Abha'],
+            ['ar' => 'خميس مشيط',        'en' => 'Khamis Mushait'],
+            ['ar' => 'جازان',            'en' => 'Jazan'],
+            ['ar' => 'نجران',            'en' => 'Najran'],
+            ['ar' => 'حائل',             'en' => 'Hail'],
+            ['ar' => 'بريدة',            'en' => 'Buraidah'],
+            ['ar' => 'عنيزة',            'en' => 'Unaizah'],
+            ['ar' => 'الرس',             'en' => 'Ar Rass'],
+            ['ar' => 'سكاكا',            'en' => 'Sakaka'],
+            ['ar' => 'عرعر',             'en' => 'Arar'],
+            ['ar' => 'القريات',          'en' => 'Qurayyat'],
+            ['ar' => 'ينبع',             'en' => 'Yanbu'],
+            ['ar' => 'رابغ',             'en' => 'Rabigh'],
+            ['ar' => 'بيشة',             'en' => 'Bisha'],
+            ['ar' => 'الباحة',           'en' => 'Al Baha'],
+            ['ar' => 'الخرج',            'en' => 'Al Kharj'],
+            ['ar' => 'الأحساء',          'en' => 'Al Ahsa'],
+            ['ar' => 'الهفوف',           'en' => 'Hofuf'],
+            ['ar' => 'القطيف',           'en' => 'Qatif'],
+            ['ar' => 'الدوادمي',         'en' => 'Ad Dawadimi'],
+            ['ar' => 'وادي الدواسر',     'en' => 'Wadi Al Dawasir'],
+            ['ar' => 'شرورة',            'en' => 'Sharurah'],
+            ['ar' => 'صبيا',             'en' => 'Sabya'],
+            ['ar' => 'المجمعة',          'en' => 'Al Majmaah'],
+            ['ar' => 'حفر الباطن',       'en' => 'Hafar Al Batin'],
+            ['ar' => 'رفحاء',            'en' => 'Rafha'],
+            ['ar' => 'رأس تنورة',        'en' => 'Ras Tanura'],
+            ['ar' => 'العلا',            'en' => 'Al Ula'],
+            ['ar' => 'أملج',             'en' => 'Umluj'],
+            ['ar' => 'ضباء',             'en' => 'Duba'],
+            ['ar' => 'القنفذة',          'en' => 'Al Qunfudhah'],
+            ['ar' => 'محايل عسير',       'en' => 'Muhayil Asir'],
+            ['ar' => 'النماص',           'en' => 'An Namas'],
+            ['ar' => 'سراة عبيدة',       'en' => 'Sarat Abidah'],
+            ['ar' => 'الليث',            'en' => 'Al Lith'],
+            ['ar' => 'الجموم',           'en' => 'Al Jumum'],
+            ['ar' => 'الزلفي',           'en' => 'Az Zulfi'],
+            ['ar' => 'شقراء',            'en' => 'Shaqra'],
+            ['ar' => 'عفيف',             'en' => 'Afif'],
+            ['ar' => 'الأفلاج',          'en' => 'Al Aflaj'],
+            ['ar' => 'السليل',           'en' => 'As Sulayyil'],
+            ['ar' => 'المزاحمية',        'en' => 'Al Muzahimiyah'],
+            ['ar' => 'حوطة بني تميم',    'en' => 'Hawtat Bani Tamim'],
+            ['ar' => 'الحريق',           'en' => 'Al Hariq'],
+            ['ar' => 'ضرما',             'en' => 'Darma'],
+            ['ar' => 'القويعية',         'en' => 'Al Quwayiyah'],
+            ['ar' => 'مرات',             'en' => 'Marat'],
+            ['ar' => 'الغاط',            'en' => 'Al Ghat'],
+            ['ar' => 'ثادق',             'en' => 'Thadiq'],
+            ['ar' => 'رماح',             'en' => 'Rumah'],
+            ['ar' => 'حريملاء',          'en' => 'Huraymila'],
+            ['ar' => 'الدرعية',          'en' => 'Diriyah'],
+            ['ar' => 'الخفجي',           'en' => 'Khafji'],
+            ['ar' => 'بقيق',             'en' => 'Buqayq'],
+            ['ar' => 'النعيرية',         'en' => 'An Nuayriyah'],
+            ['ar' => 'صفوى',             'en' => 'Safwa'],
+            ['ar' => 'سيهات',            'en' => 'Sayhat'],
+            ['ar' => 'العوامية',         'en' => 'Al Awamiyah'],
+            ['ar' => 'أبو عريش',         'en' => 'Abu Arish'],
+            ['ar' => 'الحرث',            'en' => 'Al Harth'],
+            ['ar' => 'العارضة',          'en' => 'Al Aridah'],
+            ['ar' => 'الريث',            'en' => 'Al Rayth'],
+            ['ar' => 'الطوال',           'en' => 'Al Tuwal'],
+            ['ar' => 'صامطة',            'en' => 'Samtah'],
+            ['ar' => 'فرسان',            'en' => 'Farasan'],
+            ['ar' => 'بدر',              'en' => 'Badr'],
+            ['ar' => 'خيبر',             'en' => 'Khaybar'],
+            ['ar' => 'العيص',            'en' => 'Al Ays'],
+            ['ar' => 'تثليث',            'en' => 'Tathlith'],
+            ['ar' => 'تنومة',            'en' => 'Tanumah'],
+            ['ar' => 'المندق',           'en' => 'Al Mandiq'],
+            ['ar' => 'قلوة',             'en' => 'Qilwah'],
+            ['ar' => 'العقيق',           'en' => 'Al Aqiq'],
+            ['ar' => 'المخواة',          'en' => 'Al Mikhwah'],
+            ['ar' => 'ضمد',              'en' => 'Damad'],
+            ['ar' => 'فيفاء',            'en' => 'Fifa'],
+            ['ar' => 'الداير',           'en' => 'Ad Dayr'],
+            ['ar' => 'النقيع',           'en' => 'An Nuqayah'],
+            ['ar' => 'بدر الجنوب',       'en' => 'Badr Al Janub'],
+            ['ar' => 'الحوية',           'en' => 'Al Hawiyah'],
+            ['ar' => 'الجش',             'en' => 'Al Juish'],
+        ];
+
+        foreach ($cities as $city) {
+            City::updateOrCreate(
+                ['name->ar' => $city['ar']],
+                [
+                    'name'      => ['ar' => $city['ar'], 'en' => $city['en']],
+                    'is_active' => true,
+                ]
+            );
+        }
+    }
+}
