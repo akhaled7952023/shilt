@@ -22,6 +22,10 @@ class DelegateRepository implements IDelegateRepository
             $query->where('city_id', $filters['city_id']);
         }
 
+        if (!empty($filters['platform_id'])) {
+            $query->where('platform_id', $filters['platform_id']);
+        }
+
         if (!empty($filters['search'])) {
             $term = $filters['search'];
             $query->where(function ($q) use ($term) {
@@ -41,6 +45,15 @@ class DelegateRepository implements IDelegateRepository
         return Delegate::where('status', DelegateStatus::Active)
             ->orderBy('name')
             ->select(['id', 'name'])
+            ->get();
+    }
+
+    public function getActiveByPlatformCode(string $platformCode): Collection
+    {
+        return Delegate::where('status', DelegateStatus::Active)
+            ->whereHas('platform', fn($q) => $q->where('code', $platformCode))
+            ->orderBy('name')
+            ->select(['id', 'name', 'delegate_code'])
             ->get();
     }
 

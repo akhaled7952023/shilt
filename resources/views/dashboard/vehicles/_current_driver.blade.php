@@ -73,7 +73,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>المندوب <span class="text-danger">*</span></label>
-                        @php $activeDelegates = app(\App\Services\Dashboard\Delegates\IDelegateService::class)->getActive(); @endphp
+                        @php $activeDelegates = app(\App\Services\Dashboard\Delegates\IDelegateService::class)->getActiveByPlatformCode('hungerstation'); @endphp
                         <select name="delegate_id" id="delegate_select" class="form-control border-primary" required>
                             <option value="">اختر المندوب...</option>
                             @foreach ($activeDelegates as $delegate)

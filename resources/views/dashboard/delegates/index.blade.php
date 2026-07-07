@@ -41,12 +41,12 @@
                         {{-- فلتر البحث --}}
                         <form method="GET" action="{{ route('dashboard.delegates.index') }}" class="mb-3">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <input type="text" name="search" class="form-control"
                                            placeholder="بحث برقم المندوب أو الاسم أو الجوال"
                                            value="{{ $filters['search'] ?? '' }}">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <select name="status" class="form-control">
                                         <option value="">الحالة - الكل</option>
                                         <option value="active"     {{ ($filters['status'] ?? '') === 'active'     ? 'selected' : '' }}>نشط</option>
@@ -55,13 +55,24 @@
                                         <option value="terminated" {{ ($filters['status'] ?? '') === 'terminated' ? 'selected' : '' }}>منتهي</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <select name="city_id" class="form-control">
                                         <option value="">المدينة - الكل</option>
                                         @foreach ($cities as $city)
                                             <option value="{{ $city->id }}"
                                                 {{ ($filters['city_id'] ?? '') == $city->id ? 'selected' : '' }}>
                                                 {{ $city->getTranslation('name', 'ar') }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="platform_id" class="form-control">
+                                        <option value="">المنصة - الكل</option>
+                                        @foreach ($platforms as $platform)
+                                            <option value="{{ $platform->id }}"
+                                                {{ ($filters['platform_id'] ?? '') == $platform->id ? 'selected' : '' }}>
+                                                {{ $platform->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -104,7 +115,19 @@
                                                     {{ $delegate->name }}
                                                 </a>
                                             </td>
-                                            <td>{{ $delegate->platform?->name ?? '—' }}</td>
+                                            <td>
+                                                @if ($delegate->platform?->code === 'hungerstation')
+                                                    <span class="badge" style="background-color:#fef9e7;color:#92611a;font-size:0.8rem;padding:4px 8px;border-radius:4px;">
+                                                        {{ $delegate->platform->name }}
+                                                    </span>
+                                                @elseif ($delegate->platform?->code === 'the-chefz')
+                                                    <span class="badge" style="background-color:#fff0e6;color:#c2510f;font-size:0.8rem;padding:4px 8px;border-radius:4px;">
+                                                        {{ $delegate->platform->name }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-muted">—</span>
+                                                @endif
+                                            </td>
                                             <td>{{ $delegate->phone ?? '—' }}</td>
                                             <td>{{ $delegate->city?->getTranslation('name', 'ar') ?? '—' }}</td>
                                             <td>

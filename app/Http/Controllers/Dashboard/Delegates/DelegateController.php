@@ -36,11 +36,12 @@ class DelegateController extends Controller
 
     public function index(Request $request)
     {
-        $filters   = $request->only(['status', 'city_id', 'search']);
+        $filters   = $request->only(['status', 'city_id', 'platform_id', 'search']);
         $delegates = $this->delegateService->getAll($filters);
         $cities    = $this->cityService->getAllActive();
+        $platforms = $this->platformService->getAllActive();
 
-        return view('dashboard.delegates.index', compact('delegates', 'cities', 'filters'));
+        return view('dashboard.delegates.index', compact('delegates', 'cities', 'platforms', 'filters'));
     }
 
     public function create()

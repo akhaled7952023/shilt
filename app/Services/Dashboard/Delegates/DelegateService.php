@@ -32,6 +32,11 @@ class DelegateService implements IDelegateService
         return $this->delegateRepository->getActive();
     }
 
+    public function getActiveByPlatformCode(string $platformCode): Collection
+    {
+        return $this->delegateRepository->getActiveByPlatformCode($platformCode);
+    }
+
     public function getById(int $id): Delegate
     {
         $delegate = $this->delegateRepository->getById($id);

@@ -12,6 +12,8 @@ interface IDelegateRepository
 
     public function getActive(): Collection;
 
+    public function getActiveByPlatformCode(string $platformCode): Collection;
+
     public function getById(int $id): ?Delegate;
 
     public function getWithRelations(int $id): ?Delegate;
