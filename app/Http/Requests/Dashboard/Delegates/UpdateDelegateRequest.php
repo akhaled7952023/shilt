@@ -18,7 +18,7 @@ class UpdateDelegateRequest extends FormRequest
         $code = Platform::find($this->input('platform_id'))?->code;
 
         if ($code === 'hungerstation' && $this->filled('hungerstation_rider_id')) {
-            $this->merge(['delegate_code' => 'HS-' . $this->input('hungerstation_rider_id')]);
+            $this->merge(['delegate_code' => $this->input('hungerstation_rider_id')]);
         } elseif ($code === 'the-chefz' && $this->filled('national_id')) {
             $this->merge(['delegate_code' => $this->input('national_id')]);
         }
