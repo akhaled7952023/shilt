@@ -67,6 +67,9 @@ class HungerStationFtrImportService
         $headerMap = $this->buildFtrColumnMap($sheet);
         $this->validateRequiredHeaders($headerMap);
 
+        // Parse the secondary breakdown sheet (FTR Cost / Breakdown) for audit fields
+        $breakdownData = $this->parseBreakdownSheet($spreadsheet);
+
         // Pre-load delegates indexed by hungerstation_rider_id
         $delegateMap = Delegate::whereNotNull('hungerstation_rider_id')
             ->select(['id', 'name', 'hungerstation_rider_id'])
@@ -98,11 +101,16 @@ class HungerStationFtrImportService
                     2
                 );
 
+                $breakdown = $breakdownData[$riderId] ?? [];
+
                 $matchedRiders[] = array_merge($parsed, [
-                    'delegate_id'   => $delegate->id,
-                    'delegate_name' => $delegate->name,
-                    'estimated_net' => $estimatedNet,
-                    'total_penalties' => $penalties,
+                    'delegate_id'             => $delegate->id,
+                    'delegate_name'           => $delegate->name,
+                    'estimated_net'           => $estimatedNet,
+                    'total_penalties'         => $penalties,
+                    'working_days'            => $breakdown['working_days'] ?? null,
+                    'inactive_reason'         => $breakdown['inactive_reason'] ?? null,
+                    'google_distance_payable' => $breakdown['google_distance_payable'] ?? null,
                 ]);
             } else {
                 $unmatchedRiders[] = $riderId;
@@ -170,6 +178,8 @@ class HungerStationFtrImportService
                     'import_batch_id'                  => $batch->id,
                     'rider_id_platform'                => $rider['rider_id_platform'],
                     'total_orders'                     => (int) ($rider['total_orders'] ?? 0),
+                    'working_days'                     => $rider['working_days'] ?? null,
+                    'inactive_reason'                  => $rider['inactive_reason'] ?? null,
                     'basic_payment'                    => $rider['basic_payment'],
                     'acceptance_rate_penalties'        => $rider['acceptance_rate_penalties'],
                     'contact_rate_penalties'           => $rider['contact_rate_penalties'],
@@ -186,6 +196,7 @@ class HungerStationFtrImportService
                     'courier_basic_payment'            => $rider['courier_basic_payment'] ?? 0,
                     'courier_scoring_payment'          => $rider['courier_scoring_payment'] ?? 0,
                     'rider_balance'                    => $rider['rider_balance'],
+                    'google_distance_payable'          => $rider['google_distance_payable'] ?? null,
                     'total_platform_penalties'         => 0,
                     'housing_allowance'                => 0,
                     'company_deductions_total'         => 0,
@@ -248,6 +259,121 @@ class HungerStationFtrImportService
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────────
+
+    /**
+     * Parse the secondary sheet (FTR Cost / Breakdown) for audit-only fields.
+     * Returns a map of rider_id_platform => [working_days, inactive_reason, google_distance_payable].
+     * Multiple rows per rider are aggregated (working_days and distance are summed;
+     * inactive_reason takes the first non-empty value found).
+     * Returns an empty array if the sheet does not exist or has no recognisable header.
+     */
+    private function parseBreakdownSheet(\PhpOffice\PhpSpreadsheet\Spreadsheet $spreadsheet): array
+    {
+        if ($spreadsheet->getSheetCount() <= 2) {
+            return [];
+        }
+
+        $sheet     = $spreadsheet->getSheet(2);
+        $headerMap = $this->buildBreakdownColumnMap($sheet);
+
+        if (! isset($headerMap['rider_id'])) {
+            return [];
+        }
+
+        $result     = [];
+        $highestRow = $sheet->getHighestDataRow();
+
+        for ($row = 2; $row <= $highestRow; $row++) {
+            $riderId = trim((string) $sheet->getCell($headerMap['rider_id'] . $row)->getValue());
+            $riderId = preg_replace('/\.0+$/', '', $riderId);
+
+            if ($riderId === '' || $riderId === '0') {
+                continue;
+            }
+
+            $workingDays = isset($headerMap['working_days'])
+                ? max(0, (int) $sheet->getCell($headerMap['working_days'] . $row)->getCalculatedValue())
+                : 0;
+
+            $inactiveReason = isset($headerMap['inactive_reason'])
+                ? trim((string) $sheet->getCell($headerMap['inactive_reason'] . $row)->getCalculatedValue())
+                : '';
+
+            $distPayable = isset($headerMap['google_distance_payable'])
+                ? round(abs((float) $sheet->getCell($headerMap['google_distance_payable'] . $row)->getCalculatedValue()), 3)
+                : null;
+
+            if (! isset($result[$riderId])) {
+                $result[$riderId] = [
+                    'working_days'            => 0,
+                    'inactive_reason'         => null,
+                    'google_distance_payable' => ($distPayable !== null) ? 0.0 : null,
+                ];
+            }
+
+            $result[$riderId]['working_days'] += $workingDays;
+
+            if ($result[$riderId]['inactive_reason'] === null && $inactiveReason !== '') {
+                $result[$riderId]['inactive_reason'] = $inactiveReason;
+            }
+
+            if ($distPayable !== null && $result[$riderId]['google_distance_payable'] !== null) {
+                $result[$riderId]['google_distance_payable'] += $distPayable;
+            }
+        }
+
+        // Round the distance payable
+        foreach ($result as &$data) {
+            if ($data['google_distance_payable'] !== null) {
+                $data['google_distance_payable'] = round($data['google_distance_payable'], 3);
+            }
+        }
+        unset($data);
+
+        return $result;
+    }
+
+    /**
+     * Build a column map for the secondary (Breakdown / FTR Cost) sheet.
+     * Priority-ordered to prevent "fully_working_days" from matching "working_days".
+     */
+    private function buildBreakdownColumnMap(Worksheet $sheet): array
+    {
+        $highestColIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString(
+            $sheet->getHighestDataColumn()
+        );
+
+        $prioritizedMap = [
+            'rider_id'               => 'rider_id',
+            'fully_working'          => 'fully_working_days',       // consumed first so "working_days" does not match it
+            'working_days'           => 'working_days',
+            'inactive'               => 'inactive_reason',
+            'google_distance_payabl' => 'google_distance_payable',  // present in May, absent in June
+        ];
+
+        $result = [];
+
+        for ($colIndex = 1; $colIndex <= $highestColIndex; $colIndex++) {
+            $colLetter  = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex);
+            $headerRaw  = trim((string) $sheet->getCell($colLetter . '1')->getValue());
+            if ($headerRaw === '') {
+                continue;
+            }
+            $headerLower = strtolower($headerRaw);
+
+            foreach ($prioritizedMap as $keyword => $fieldName) {
+                if (isset($result[$fieldName])) {
+                    continue;
+                }
+                if (str_contains($headerLower, $keyword)) {
+                    $result[$fieldName] = $colLetter;
+                    break;
+                }
+            }
+        }
+
+        return $result;
+    }
 
     /**
      * Build a column map: internal_field_name => column_letter.

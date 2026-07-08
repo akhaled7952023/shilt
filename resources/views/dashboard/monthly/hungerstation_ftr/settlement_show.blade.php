@@ -197,6 +197,66 @@ $csrfToken      = csrf_token();
                                 </table>
                             </div>
                         </div>
+
+                        {{-- بيانات التدقيق من ورقة التوزيع --}}
+                        @if ($settlement->working_days !== null || $settlement->inactive_reason !== null || $settlement->google_distance_payable !== null)
+                        <div class="mt-3">
+                            <h6 class="text-muted border-bottom pb-1 mb-2">
+                                <i class="la la-search-plus text-secondary"></i>
+                                بيانات التدقيق
+                                <small class="text-muted">(من ورقة التوزيع — للمرجعية فقط، لا تدخل في الحساب)</small>
+                            </h6>
+                            <div class="row">
+                                @if ($settlement->inactive_reason !== null)
+                                <div class="col-md-4 mb-2">
+                                    <div class="card card-body py-2 px-3 h-100">
+                                        <small class="text-muted d-block mb-1">حالة الخدمة</small>
+                                        @if ($settlement->inactive_reason === 'Active')
+                                            <span class="badge badge-success badge-pill px-3 py-1" style="font-size:.85rem;">
+                                                <i class="la la-check-circle"></i> نشط طوال الفترة
+                                            </span>
+                                        @elseif ($settlement->inactive_reason === 'Working Days')
+                                            <span class="badge badge-info badge-pill px-3 py-1" style="font-size:.85rem;">
+                                                <i class="la la-calendar-check-o"></i> دخل منتصف الفترة
+                                            </span>
+                                        @else
+                                            <span class="badge badge-secondary badge-pill px-3 py-1" style="font-size:.85rem;">
+                                                {{ $settlement->inactive_reason }}
+                                            </span>
+                                        @endif
+                                        <small class="text-muted d-block mt-1" style="font-size:.75rem;">
+                                            Active = نشط كامل الشهر — Working Days = انضم أو غادر في منتصف الشهر
+                                        </small>
+                                    </div>
+                                </div>
+                                @endif
+                                @if ($settlement->working_days !== null)
+                                <div class="col-md-4 mb-2">
+                                    <div class="card card-body py-2 px-3 h-100">
+                                        <small class="text-muted d-block mb-1">أيام العمل الفعلية</small>
+                                        <strong class="font-large-1">{{ $settlement->working_days }}</strong>
+                                        <span class="text-muted"> يوم</span>
+                                        <small class="text-muted d-block mt-1" style="font-size:.75rem;">
+                                            مجموع أيام النشاط الفعلي على منصة هنقرستيشن
+                                        </small>
+                                    </div>
+                                </div>
+                                @endif
+                                @if ($settlement->google_distance_payable !== null)
+                                <div class="col-md-4 mb-2">
+                                    <div class="card card-body py-2 px-3 h-100">
+                                        <small class="text-muted d-block mb-1">الكيلومترات المدفوعة</small>
+                                        <strong class="font-large-1">{{ number_format($settlement->google_distance_payable, 2) }}</strong>
+                                        <span class="text-muted"> كم</span>
+                                        <small class="text-muted d-block mt-1" style="font-size:.75rem;">
+                                            أساس حساب مدفوعات المسافة — للتدقيق على معدل السعر فقط
+                                        </small>
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
                     @endif
 
                     {{-- ════════ التبويب 2: الحساب والغرامات ════════ --}}
@@ -870,12 +930,12 @@ $csrfToken      = csrf_token();
     var curDeductions = base.deductions;
 
     // ── اختيار الاتجاه (نموذج الإضافة) ───────────────────────────────
+    // NOTE: CSS display:none on <optgroup> is ignored by most browsers.
+    // We replace the select's options entirely instead.
     function setDirection(isBenefit) {
         document.getElementById('adj-is-benefit').value = isBenefit ? '1' : '0';
-        var dedOpts = document.getElementById('adj-deduction-opts');
-        var benOpts = document.getElementById('adj-benefit-opts');
-        var select  = document.getElementById('adj-type-select');
-        var btns    = document.querySelectorAll('.adj-dir-btn');
+        var select = document.getElementById('adj-type-select');
+        var btns   = document.querySelectorAll('.adj-dir-btn');
 
         btns.forEach(function(b) {
             var bv = parseInt(b.dataset.value);
@@ -888,17 +948,28 @@ $csrfToken      = csrf_token();
             }
         });
 
-        if (isBenefit) {
-            dedOpts.style.display = 'none';
-            benOpts.style.display = '';
-            select.value = Object.keys(benefitLabels)[0] || '';
-        } else {
-            benOpts.style.display = 'none';
-            dedOpts.style.display = '';
-            select.value = Object.keys(deductionLabels)[0] || '';
+        if (select) {
+            var labels = isBenefit ? benefitLabels : deductionLabels;
+            select.innerHTML = '';
+            Object.keys(labels).forEach(function(k) {
+                var opt = document.createElement('option');
+                opt.value = k;
+                opt.textContent = labels[k];
+                select.appendChild(opt);
+            });
         }
     }
     window.setDirection = setDirection;
+
+    // ── مساعد: تحليل رسالة الخطأ من استجابة الخادم ────────────────────
+    function extractErrorMessage(data) {
+        if (data && data.errors) {
+            return Object.values(data.errors).map(function(e) {
+                return Array.isArray(e) ? e.join(' ') : e;
+            }).join('\n');
+        }
+        return (data && data.message) ? data.message : 'حدث خطأ غير متوقع. يرجى المحاولة مجدداً.';
+    }
 
     // ── AJAX: إضافة تسوية ──────────────────────────────────────────────
     var addForm = document.getElementById('add-adjustment-form');
@@ -913,7 +984,12 @@ $csrfToken      = csrf_token();
                 headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
                 body: new FormData(addForm),
             })
-            .then(function(r) { return r.json(); })
+            .then(function(r) {
+                return r.json().then(function(data) {
+                    if (!r.ok) { throw new Error(extractErrorMessage(data)); }
+                    return data;
+                });
+            })
             .then(function(data) {
                 if (data.error) { alert(data.error); return; }
                 curBenefits   = parseFloat(data.company_benefits_total)   || 0;
@@ -924,7 +1000,9 @@ $csrfToken      = csrf_token();
                 addForm.reset();
                 setDirection(0);
             })
-            .catch(function() { addForm.submit(); })
+            .catch(function(err) {
+                if (err && err.message) { alert(err.message); } else { addForm.submit(); }
+            })
             .finally(function() { btn.disabled = false; });
         });
     }
@@ -946,7 +1024,12 @@ $csrfToken      = csrf_token();
                 'X-CSRF-TOKEN': CSRF,
             },
         })
-        .then(function(r) { return r.json(); })
+        .then(function(r) {
+            return r.json().then(function(data) {
+                if (!r.ok) { throw new Error(extractErrorMessage(data)); }
+                return data;
+            });
+        })
         .then(function(data) {
             curBenefits   = parseFloat(data.company_benefits_total)   || 0;
             curDeductions = parseFloat(data.company_deductions_total) || 0;
@@ -954,7 +1037,10 @@ $csrfToken      = csrf_token();
             updateTotalsDisplay(curBenefits, curDeductions);
             rebuildTables(data.adjustments);
         })
-        .catch(function() { var row = document.getElementById('adj-row-' + id); if (row) row.remove(); })
+        .catch(function(err) {
+            if (err && err.message) { alert(err.message); }
+            else { var row = document.getElementById('adj-row-' + id); if (row) row.remove(); }
+        })
         .finally(function() { btn.disabled = false; });
     });
 
@@ -1003,7 +1089,12 @@ $csrfToken      = csrf_token();
                 headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
                 body: new FormData(editForm),
             })
-            .then(function(r) { return r.json(); })
+            .then(function(r) {
+                return r.json().then(function(data) {
+                    if (!r.ok) { throw new Error(extractErrorMessage(data)); }
+                    return data;
+                });
+            })
             .then(function(data) {
                 if (data.error) { alert(data.error); return; }
                 curBenefits   = parseFloat(data.company_benefits_total)   || 0;
@@ -1013,7 +1104,9 @@ $csrfToken      = csrf_token();
                 rebuildTables(data.adjustments);
                 if (typeof $ !== 'undefined') $('#editAdjModal').modal('hide');
             })
-            .catch(function() { editForm.submit(); })
+            .catch(function(err) {
+                if (err && err.message) { alert(err.message); } else { editForm.submit(); }
+            })
             .finally(function() { btn.disabled = false; });
         });
     }
@@ -1086,6 +1179,10 @@ $csrfToken      = csrf_token();
     function esc(str) {
         return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
+
+    // Initialize the add-form select on page load to show only deduction options.
+    // The Blade template renders both optgroups; we replace them with the correct set.
+    if (addForm) { setDirection(0); }
 
 }());
 </script>

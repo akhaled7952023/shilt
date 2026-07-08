@@ -481,6 +481,12 @@ body {
                         <td>{{ __('portal.print_orders_row') }}</td>
                         <td>{{ number_format($settlement->total_orders) }} {{ __('portal.print_orders_unit') }}</td>
                     </tr>
+                    @if($settlement->working_days !== null)
+                    <tr>
+                        <td>{{ __('portal.print_working_days_row') }}</td>
+                        <td>{{ $settlement->working_days }} {{ __('portal.print_working_days_unit') }}</td>
+                    </tr>
+                    @endif
                     <tr class="cred-row">
                         <td>{{ __('portal.base_salary_distance') }}</td>
                         <td>{{ number_format((float)$settlement->distance_payment, 2) }}</td>

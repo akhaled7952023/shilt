@@ -144,6 +144,8 @@
                                 <tr>
                                     <th>المندوب</th>
                                     <th class="text-center">المعرف</th>
+                                    <th class="text-center">الطلبات</th>
+                                    <th class="text-center">أيام العمل</th>
                                     <th class="text-right">صافي الراتب</th>
                                     <th class="text-center">تسويات</th>
                                     <th></th>
@@ -163,6 +165,16 @@
                                         </td>
                                         <td class="text-center">
                                             <code class="small">{{ $s->rider_id_platform }}</code>
+                                        </td>
+                                        <td class="text-center">
+                                            {{ number_format($s->total_orders) }}
+                                        </td>
+                                        <td class="text-center">
+                                            @if ($s->working_days !== null)
+                                                {{ $s->working_days }}
+                                            @else
+                                                <span class="text-muted">—</span>
+                                            @endif
                                         </td>
                                         <td class="text-right font-weight-bold {{ $s->net_salary < 0 ? 'text-danger' : 'text-success' }}">
                                             {{ number_format($s->net_salary, 2) }}

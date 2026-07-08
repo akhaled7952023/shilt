@@ -90,7 +90,7 @@ class HungerStationFtrSettlementController extends Controller
         $data = $request->validate([
             'deduction_type' => ['required', 'in:' . implode(',', $validTypes)],
             'is_benefit'     => ['nullable', 'boolean'],
-            'label'          => ['required_if:deduction_type,other,other_benefit', 'nullable', 'string', 'max:200'],
+            'label'          => ['required_if:deduction_type,other', 'nullable', 'string', 'max:200'],
             'amount'         => ['required', 'numeric', 'gt:0'],
             'notes'          => ['nullable', 'string', 'max:500'],
         ], [
@@ -100,8 +100,10 @@ class HungerStationFtrSettlementController extends Controller
             'label.required_if'       => 'يرجى إدخال وصف عند اختيار "أخرى".',
         ]);
 
-        $label = in_array($data['deduction_type'], ['other', 'other_benefit'])
-            ? ($data['label'] ?? ($isBenefit ? 'مزية أخرى' : 'خصم آخر'))
+        // 'other_benefit' is a fixed named type (منح الشركة) — label comes from the constants.
+        // Only the legacy 'other' type requires a user-supplied description.
+        $label = ($data['deduction_type'] === 'other')
+            ? ($data['label'] ?? 'خصم آخر')
             : ($typeLabels[$data['deduction_type']] ?? $data['deduction_type']);
 
         HungerStationFtrDelegateDeduction::create([
@@ -157,12 +159,12 @@ class HungerStationFtrSettlementController extends Controller
 
         $data = $request->validate([
             'deduction_type' => ['required', 'in:' . implode(',', $validTypes)],
-            'label'          => ['required_if:deduction_type,other,other_benefit', 'nullable', 'string', 'max:200'],
+            'label'          => ['required_if:deduction_type,other', 'nullable', 'string', 'max:200'],
             'amount'         => ['required', 'numeric', 'gt:0'],
             'notes'          => ['nullable', 'string', 'max:500'],
         ]);
 
-        $label = in_array($data['deduction_type'], ['other', 'other_benefit'])
+        $label = ($data['deduction_type'] === 'other')
             ? ($data['label'] ?? $deduction->label)
             : ($typeLabels[$data['deduction_type']] ?? $data['deduction_type']);
 

@@ -95,6 +95,15 @@
                         </td>
                         <td>{{ number_format($settlement->total_orders) }}</td>
                     </tr>
+                    @if($settlement->working_days !== null)
+                    <tr>
+                        <td>
+                            <i class="la la-calendar-check-o" style="{{ $iconMargin }}color:#0369a1;"></i>
+                            {{ __('portal.working_days_label') }}
+                        </td>
+                        <td>{{ $settlement->working_days }}</td>
+                    </tr>
+                    @endif
                     <tr class="cred-row">
                         <td>
                             <i class="la la-money" style="{{ $iconMargin }}color:#16a34a;"></i>
