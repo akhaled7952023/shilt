@@ -66,8 +66,8 @@ class SupportTicketController extends Controller
 
         if (! empty($filters['sla_status'])) {
             match ($filters['sla_status']) {
-                'overdue_response'   => $query->scopeOverdueFirstResponse(),
-                'overdue_resolution' => $query->scopeOverdueResolution(),
+                'overdue_response'   => $query->overdueFirstResponse(),
+                'overdue_resolution' => $query->overdueResolution(),
                 default              => null,
             };
         }
