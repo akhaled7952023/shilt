@@ -188,6 +188,7 @@ return [
     'yesterday_label'       => 'أمس',
     'earlier_label'         => 'سابقاً',
     'view_settlement_link'  => 'عرض التسوية',
+    'view_ticket_link'      => 'عرض التذكرة',
     'mark_read_btn'         => 'قرأت',
 
     // ── Platform display names ──────────────────────────────────────────────
@@ -256,6 +257,114 @@ return [
     'flash_all_read'                    => 'تم تعليم جميع الإشعارات كمقروءة.',
     'val_report_not_available'          => 'هذا التقرير غير متاح بعد. يُنشر بعد اعتماد الفترة.',
 
+    // ── Support Center (Phase 3) ───────────────────────────────────────────
+
+    // Navigation
+    'nav_support'               => 'تذاكر الدعم',
+    'nav_support_short'         => 'الدعم',
+
+    // My Tickets list
+    'support_tickets_title'     => 'تذاكري',
+    'ticket_open_new'           => '+ تذكرة جديدة',
+    'ticket_all_statuses'       => 'جميع الحالات',
+    'ticket_empty_title'        => 'لا توجد تذاكر',
+    'ticket_empty_sub'          => 'لا توجد تذاكر دعم بعد. انقر على «+ تذكرة جديدة» لفتح أول تذكرة.',
+    'ticket_col_number'         => 'رقم التذكرة',
+    'ticket_col_category'       => 'النوع',
+    'ticket_col_subject'        => 'الموضوع',
+    'ticket_col_status'         => 'الحالة',
+    'ticket_col_opened'         => 'تاريخ الفتح',
+
+    // Status labels
+    'ticket_status_open'              => 'مفتوحة',
+    'ticket_status_in_progress'       => 'قيد المعالجة',
+    'ticket_status_awaiting_delegate' => 'بانتظار ردك',
+    'ticket_status_resolved'          => 'محلولة',
+    'ticket_status_reopened'          => 'مُعاد فتحها',
+    'ticket_status_closed'            => 'مغلقة',
+
+    // Category picker — Step 1
+    'ticket_new_title'          => 'تذكرة جديدة',
+    'ticket_step1_title'        => 'اختر نوع التذكرة',
+    'ticket_step1_subtitle'     => 'حدد نوع طلبك لنتمكن من توجيهه للقسم المناسب.',
+    'ticket_group_financial'    => 'الطلبات المالية',
+    'ticket_group_support'      => 'الدعم',
+
+    // Category labels
+    'ticket_cat_settlement_objection'       => 'اعتراض على التسوية',
+    'ticket_cat_advance_request'            => 'طلب سلفة',
+    'ticket_cat_fuel_request'               => 'طلب وقود',
+    'ticket_cat_traffic_violation_request'  => 'مخالفة مرورية',
+    'ticket_cat_penalty_request'            => 'غرامة داخلية',
+    'ticket_cat_other_financial_request'    => 'طلب مالي آخر',
+    'ticket_cat_technical_support'          => 'مشكلة تقنية',
+    'ticket_cat_payroll_inquiry'            => 'استفسار عن الراتب',
+    'ticket_cat_general_inquiry'            => 'استفسار عام',
+
+    // Category short descriptions
+    'ticket_cat_desc_settlement_objection'      => 'اعتراض على بنود أو مبالغ في تسويتك الشهرية.',
+    'ticket_cat_desc_advance_request'           => 'طلب صرف سلفة على الراتب.',
+    'ticket_cat_desc_fuel_request'              => 'طلب تسوية مصاريف الوقود.',
+    'ticket_cat_desc_traffic_violation_request' => 'الاعتراض على مخالفة مرورية.',
+    'ticket_cat_desc_penalty_request'           => 'الاعتراض على غرامة داخلية.',
+    'ticket_cat_desc_other_financial_request'   => 'طلبات مالية أخرى غير مصنفة.',
+    'ticket_cat_desc_technical_support'         => 'مشكلة تقنية في التطبيق أو المنصة.',
+    'ticket_cat_desc_payroll_inquiry'           => 'استفسار عن الراتب أو المستحقات.',
+    'ticket_cat_desc_general_inquiry'           => 'استفسارات عامة أخرى.',
+
+    // Ticket form — Step 2
+    'ticket_step2_title'             => 'تفاصيل التذكرة',
+    'ticket_form_category_label'     => 'نوع الطلب',
+    'ticket_form_change_category'    => 'تغيير النوع',
+    'ticket_form_subject_label'      => 'الموضوع',
+    'ticket_form_subject_ph'         => 'أدخل عنوانًا مختصرًا للطلب',
+    'ticket_form_description_label'  => 'وصف الطلب',
+    'ticket_form_description_ph'     => 'اشرح تفاصيل طلبك... (اختياري)',
+    'ticket_form_optional'           => '(اختياري)',
+    'ticket_form_amount_label'       => 'المبلغ المطلوب (ريال سعودي)',
+    'ticket_form_amount_ph'          => '0.00',
+    'ticket_form_attachments_label'  => 'المرفقات (اختياري)',
+    'ticket_form_attachments_hint'   => 'حد أقصى 3 ملفات • كل ملف لا يتجاوز 10 ميغابايت • الأنواع المقبولة: صورة أو PDF',
+    'ticket_form_submit'             => 'إرسال التذكرة',
+    'ticket_form_back'               => 'رجوع',
+    'ticket_form_next'               => 'التالي',
+
+    // Ticket detail
+    'ticket_detail_title'            => 'تذكرة :number',
+    'ticket_opened_at'               => 'تاريخ الفتح',
+    'ticket_priority_label'          => 'الأولوية',
+    'ticket_replies_section'         => 'المحادثة',
+    'ticket_reply_by_admin'          => 'رد الإدارة',
+    'ticket_reply_by_you'            => 'ردك',
+    'ticket_no_replies'              => 'لا توجد ردود بعد. سيرد عليك فريق الدعم قريبًا.',
+    'ticket_reply_form_label'        => 'أضف ردًا',
+    'ticket_reply_placeholder'       => 'اكتب ردك هنا...',
+    'ticket_reply_submit'            => 'إرسال الرد',
+    'ticket_resolved_notice'         => 'تم حل هذه التذكرة. يمكنك الرد حتى :deadline لإعادة فتحها.',
+    'ticket_closed_notice'           => 'هذه التذكرة مغلقة نهائيًا.',
+    'ticket_closed_open_new'         => 'فتح تذكرة جديدة',
+    'ticket_back_to_list'            => 'العودة إلى قائمة التذاكر',
+    'ticket_attachment_download'     => 'تحميل',
+    'ticket_attachments_label'       => 'المرفقات',
+
+    // Financial request panel
+    'ticket_financial_request_label' => 'الطلب المالي',
+    'ticket_financial_amount'        => 'المبلغ المطلوب',
+    'ticket_financial_approved_amount' => 'المبلغ المعتمد',
+    'ticket_financial_status'        => 'الحالة',
+    'ticket_financial_pending'       => 'بانتظار المراجعة',
+    'ticket_financial_approved'      => 'مُوافق عليه ✓',
+    'ticket_financial_rejected'      => 'مرفوض',
+    'ticket_financial_rejection_reason' => 'سبب الرفض',
+    'ticket_financial_needs_info'       => 'بانتظار معلومات إضافية',
+    'ticket_financial_needs_info_hint'  => 'طلب منك الفريق الإداري تفاصيل إضافية. يرجى الرد على رسالتهم في المحادثة أدناه.',
+
+    // Flash messages
+    'ticket_created_success'    => 'تم إنشاء تذكرتك بنجاح. رقم التذكرة: :number',
+    'reply_sent_success'        => 'تم إرسال ردك بنجاح.',
+    'ticket_invalid_category'   => 'النوع المحدد غير صالح.',
+    'ticket_reply_not_allowed'  => 'لا يمكن الرد على هذه التذكرة في وضعها الحالي.',
+
     // ── Print (HS) ──────────────────────────────────────────────────────────
     'print_back_settlement'     => '← العودة إلى التسوية',
     'print_save_hint'           => 'استخدم "حفظ كـ PDF" في نافذة الطباعة لتنزيل ملف PDF',
@@ -302,5 +411,16 @@ return [
     'print_cr_full'             => 'السجل التجاري: :cr',
     'print_back_detail'         => '← العودة للتفاصيل',
     'print_back_btn'            => '🖨 طباعة',
+
+    // ── Email on Delegate Profile (Batch 7) ───────────────────────────────
+    'email_update_heading'        => 'البريد الإلكتروني',
+    'email_update_label'          => 'البريد الإلكتروني',
+    'email_update_ph'             => 'example@email.com',
+    'email_update_save'           => 'حفظ البريد الإلكتروني',
+    'email_update_success'        => 'تم تحديث البريد الإلكتروني بنجاح.',
+    'email_no_address'            => 'لا يوجد بريد إلكتروني مسجّل — أضفه لتتلقى الإشعارات.',
+    'val_email_invalid'           => 'البريد الإلكتروني غير صالح.',
+    'val_email_max'               => 'البريد الإلكتروني طويل جداً.',
+    'val_email_taken'             => 'هذا البريد الإلكتروني مسجّل لمندوب آخر.',
 
 ];

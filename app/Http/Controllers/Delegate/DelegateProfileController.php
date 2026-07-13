@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class DelegateProfileController extends Controller
 {
@@ -21,6 +22,24 @@ class DelegateProfileController extends Controller
             ->first();
 
         return view('portal.profile.show', compact('delegate', 'vehicleAssignment'));
+    }
+
+    public function updateEmail(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $delegate = Auth::guard('delegate')->user();
+
+        $request->validate([
+            'email' => ['nullable', 'email', 'max:255', Rule::unique('delegates', 'email')->ignore($delegate->id)],
+        ], [
+            'email.email'   => __('portal.val_email_invalid'),
+            'email.max'     => __('portal.val_email_max'),
+            'email.unique'  => __('portal.val_email_taken'),
+        ]);
+
+        $delegate->update(['email' => $request->filled('email') ? $request->email : null]);
+
+        return redirect()->route('portal.profile')
+            ->with('email_success', __('portal.email_update_success'));
     }
 
     public function changePassword(Request $request)

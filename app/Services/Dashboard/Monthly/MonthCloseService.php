@@ -2,16 +2,21 @@
 
 namespace App\Services\Dashboard\Monthly;
 
+use App\Enums\NotificationCategory;
+use App\Enums\NotificationChannel;
 use App\Enums\PeriodStatus;
 use App\Models\Delegate;
 use App\Models\MonthlyPeriod;
 use App\Services\DelegateNotificationService;
+use App\Services\Support\EmailNotificationService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class MonthCloseService
 {
     public function __construct(
         protected DelegateNotificationService $notificationService,
+        protected EmailNotificationService    $emailService,
     ) {}
 
     public function close(MonthlyPeriod $period, int $closedByUserId): void
@@ -62,9 +67,50 @@ class MonthCloseService
 
         if ($delegateIds->isEmpty()) return;
 
-        Delegate::whereIn('id', $delegateIds)
+        $delegates = Delegate::whereIn('id', $delegateIds)
             ->where('portal_enabled', true)
-            ->get()
-            ->each(fn($d) => $this->notificationService->notifySettlementPublished($d, $period));
+            ->get();
+
+        // Existing system: send old DelegateNotification
+        $delegates->each(fn ($d) => $this->notificationService->notifySettlementPublished($d, $period));
+
+        // P4-009: also write to the new Phase 3 notifications table (HungerStation only)
+        if ($period->platform?->code === 'hungerstation' && $delegates->isNotEmpty()) {
+            try {
+                $periodLabel = $period->getDisplayLabel();
+                $now         = now()->toDateTimeString();
+
+                $rows = $delegates->map(fn ($d) => [
+                    'recipient_type'  => 'delegate',
+                    'recipient_id'    => $d->id,
+                    'channel'         => NotificationChannel::Portal->value,
+                    'category'        => NotificationCategory::SettlementPublished->value,
+                    'title'           => "كشف راتبك لشهر {$periodLabel} متاح الآن",
+                    'body'            => "يمكنك الآن مراجعة تفاصيل كشف راتبك الشهري لفترة {$periodLabel}.",
+                    'action_url'      => route('portal.settlements.show', $period->id),
+                    'notifiable_type' => MonthlyPeriod::class,
+                    'notifiable_id'   => $period->id,
+                    'sent_at'         => $now,
+                    'created_at'      => $now,
+                ])->toArray();
+
+                DB::table('notifications')->insert($rows);
+
+                // Send email to each delegate who has an email address
+                foreach ($delegates as $d) {
+                    try {
+                        $this->emailService->sendToDelegateModel(
+                            $d,
+                            NotificationCategory::SettlementPublished,
+                            "كشف راتبك لشهر {$periodLabel} متاح الآن",
+                            "يمكنك الآن مراجعة تفاصيل كشف راتبك الشهري لفترة {$periodLabel}.",
+                            route('portal.settlements.show', $period->id),
+                        );
+                    } catch (\Throwable) {}
+                }
+            } catch (\Throwable $e) {
+                Log::warning('MonthCloseService: Phase 3 notification insert failed', ['error' => $e->getMessage()]);
+            }
+        }
     }
 }

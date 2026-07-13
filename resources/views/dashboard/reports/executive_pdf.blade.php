@@ -138,6 +138,11 @@ body { font-family:'Arial','Tahoma',sans-serif; background:#fff; direction:rtl; 
 </style>
 </head>
 <body>
+@php
+    $isAll = $filters['platform'] === 'all';
+    $isHs  = in_array($filters['platform'], ['all', 'hungerstation']);
+    $isCz  = in_array($filters['platform'], ['all', 'the-chefz']);
+@endphp
 
 {{-- Overlay --}}
 <div id="pdf-overlay">
@@ -179,7 +184,7 @@ body { font-family:'Arial','Tahoma',sans-serif; background:#fff; direction:rtl; 
         </div>
         <div class="pdf-kpi" style="--c:#0d9488;">
             <div class="pdf-kpi-num">{{ number_format($kpis['grossFees'],0) }}</div>
-            <div class="pdf-kpi-lbl">رسوم التوصيل (ريال)</div>
+            <div class="pdf-kpi-lbl">{{ $isHs && !$isCz ? 'الدفعة الأساسية FTR (ريال)' : ($isCz && !$isHs ? 'رسوم التوصيل (ريال)' : 'إجمالي الإيرادات (ريال)') }}</div>
         </div>
         <div class="pdf-kpi" style="--c:#7c3aed;">
             <div class="pdf-kpi-num">{{ number_format($kpis['totalSalaries'],0) }}</div>

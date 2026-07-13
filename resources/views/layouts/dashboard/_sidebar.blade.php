@@ -134,6 +134,42 @@
                 </li>
             @endcan
 
+            {{-- مركز الدعم (Phase 3 — HungerStation only) --}}
+            @can('support')
+                <li class="nav-item {{ request()->routeIs('dashboard.support.*') ? 'open' : '' }}">
+                    <a href="#">
+                        <i class="la la-headphones"></i>
+                        <span class="menu-title">مركز الدعم</span>
+                    </a>
+                    <ul class="menu-content">
+                        <li class="{{ request()->routeIs('dashboard.support.tickets.index') ? 'active' : '' }}">
+                            <a class="menu-item" href="{{ route('dashboard.support.tickets.index') }}">
+                                <i class="la la-ticket" style="margin-left:6px;font-size:13px;"></i>
+                                قائمة التذاكر
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('dashboard.support.tickets.objections') ? 'active' : '' }}">
+                            <a class="menu-item" href="{{ route('dashboard.support.tickets.objections') }}">
+                                <i class="la la-exclamation-circle" style="margin-left:6px;font-size:13px;"></i>
+                                اعتراضات التسوية
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('dashboard.support.financial-requests.*') ? 'active' : '' }}">
+                            <a class="menu-item" href="{{ route('dashboard.support.financial-requests.index') }}">
+                                <i class="la la-money" style="margin-left:6px;font-size:13px;"></i>
+                                الطلبات المالية
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('dashboard.support.activity.*') ? 'active' : '' }}">
+                            <a class="menu-item" href="{{ route('dashboard.support.activity.index') }}">
+                                <i class="la la-list" style="margin-left:6px;font-size:13px;"></i>
+                                سجل النشاط
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endcan
+
             {{-- الإعدادات --}}
             @can('settings')
                 <li class="nav-item">

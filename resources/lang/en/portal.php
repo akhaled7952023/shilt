@@ -188,6 +188,7 @@ return [
     'yesterday_label'       => 'Yesterday',
     'earlier_label'         => 'Earlier',
     'view_settlement_link'  => 'View Settlement',
+    'view_ticket_link'      => 'View Ticket',
     'mark_read_btn'         => 'Mark Read',
 
     // ── Platform display names ──────────────────────────────────────────────
@@ -256,6 +257,114 @@ return [
     'flash_all_read'                    => 'All notifications marked as read.',
     'val_report_not_available'          => 'This report is not available yet. It is published after the period is approved.',
 
+    // ── Support Center (Phase 3) ───────────────────────────────────────────
+
+    // Navigation
+    'nav_support'               => 'Support Tickets',
+    'nav_support_short'         => 'Support',
+
+    // My Tickets list
+    'support_tickets_title'     => 'My Tickets',
+    'ticket_open_new'           => '+ New Ticket',
+    'ticket_all_statuses'       => 'All Statuses',
+    'ticket_empty_title'        => 'No Tickets',
+    'ticket_empty_sub'          => 'No support tickets yet. Click «+ New Ticket» to open your first one.',
+    'ticket_col_number'         => 'Ticket #',
+    'ticket_col_category'       => 'Category',
+    'ticket_col_subject'        => 'Subject',
+    'ticket_col_status'         => 'Status',
+    'ticket_col_opened'         => 'Opened',
+
+    // Status labels
+    'ticket_status_open'              => 'Open',
+    'ticket_status_in_progress'       => 'In Progress',
+    'ticket_status_awaiting_delegate' => 'Awaiting Your Reply',
+    'ticket_status_resolved'          => 'Resolved',
+    'ticket_status_reopened'          => 'Reopened',
+    'ticket_status_closed'            => 'Closed',
+
+    // Category picker — Step 1
+    'ticket_new_title'          => 'New Ticket',
+    'ticket_step1_title'        => 'Select Ticket Type',
+    'ticket_step1_subtitle'     => 'Choose your request type so we can route it to the right team.',
+    'ticket_group_financial'    => 'Financial Requests',
+    'ticket_group_support'      => 'Support',
+
+    // Category labels
+    'ticket_cat_settlement_objection'       => 'Settlement Objection',
+    'ticket_cat_advance_request'            => 'Advance Request',
+    'ticket_cat_fuel_request'               => 'Fuel Request',
+    'ticket_cat_traffic_violation_request'  => 'Traffic Violation',
+    'ticket_cat_penalty_request'            => 'Internal Penalty',
+    'ticket_cat_other_financial_request'    => 'Other Financial Request',
+    'ticket_cat_technical_support'          => 'Technical Issue',
+    'ticket_cat_payroll_inquiry'            => 'Payroll Inquiry',
+    'ticket_cat_general_inquiry'            => 'General Inquiry',
+
+    // Category short descriptions
+    'ticket_cat_desc_settlement_objection'      => 'Object to items or amounts in your monthly settlement.',
+    'ticket_cat_desc_advance_request'           => 'Request a salary advance payment.',
+    'ticket_cat_desc_fuel_request'              => 'Request fuel expense reimbursement.',
+    'ticket_cat_desc_traffic_violation_request' => 'Dispute a traffic violation charge.',
+    'ticket_cat_desc_penalty_request'           => 'Dispute an internal penalty.',
+    'ticket_cat_desc_other_financial_request'   => 'Other unclassified financial requests.',
+    'ticket_cat_desc_technical_support'         => 'Technical problem with the app or platform.',
+    'ticket_cat_desc_payroll_inquiry'           => 'Inquire about salary or entitlements.',
+    'ticket_cat_desc_general_inquiry'           => 'Other general inquiries.',
+
+    // Ticket form — Step 2
+    'ticket_step2_title'             => 'Ticket Details',
+    'ticket_form_category_label'     => 'Request Type',
+    'ticket_form_change_category'    => 'Change Type',
+    'ticket_form_subject_label'      => 'Subject',
+    'ticket_form_subject_ph'         => 'Enter a brief subject for your request',
+    'ticket_form_description_label'  => 'Description',
+    'ticket_form_description_ph'     => 'Describe your request in detail... (optional)',
+    'ticket_form_optional'           => '(Optional)',
+    'ticket_form_amount_label'       => 'Requested Amount (SAR)',
+    'ticket_form_amount_ph'          => '0.00',
+    'ticket_form_attachments_label'  => 'Attachments (Optional)',
+    'ticket_form_attachments_hint'   => 'Max 3 files • 10 MB each • Accepted: images or PDF',
+    'ticket_form_submit'             => 'Submit Ticket',
+    'ticket_form_back'               => 'Back',
+    'ticket_form_next'               => 'Next',
+
+    // Ticket detail
+    'ticket_detail_title'            => 'Ticket :number',
+    'ticket_opened_at'               => 'Opened',
+    'ticket_priority_label'          => 'Priority',
+    'ticket_replies_section'         => 'Conversation',
+    'ticket_reply_by_admin'          => 'Admin Reply',
+    'ticket_reply_by_you'            => 'Your Reply',
+    'ticket_no_replies'              => 'No replies yet. The support team will respond soon.',
+    'ticket_reply_form_label'        => 'Add a Reply',
+    'ticket_reply_placeholder'       => 'Type your reply here...',
+    'ticket_reply_submit'            => 'Send Reply',
+    'ticket_resolved_notice'         => 'This ticket has been resolved. You can reply until :deadline to reopen it.',
+    'ticket_closed_notice'           => 'This ticket is permanently closed.',
+    'ticket_closed_open_new'         => 'Open New Ticket',
+    'ticket_back_to_list'            => 'Back to My Tickets',
+    'ticket_attachment_download'     => 'Download',
+    'ticket_attachments_label'       => 'Attachments',
+
+    // Financial request panel
+    'ticket_financial_request_label'    => 'Financial Request',
+    'ticket_financial_amount'           => 'Requested Amount',
+    'ticket_financial_approved_amount'  => 'Approved Amount',
+    'ticket_financial_status'           => 'Status',
+    'ticket_financial_pending'          => 'Pending Review',
+    'ticket_financial_approved'         => 'Approved ✓',
+    'ticket_financial_rejected'         => 'Rejected',
+    'ticket_financial_rejection_reason' => 'Rejection Reason',
+    'ticket_financial_needs_info'       => 'Needs More Information',
+    'ticket_financial_needs_info_hint'  => 'The admin team has requested additional details. Please reply to their message in the conversation below.',
+
+    // Flash messages
+    'ticket_created_success'    => 'Your ticket was created successfully. Ticket number: :number',
+    'reply_sent_success'        => 'Your reply was sent successfully.',
+    'ticket_invalid_category'   => 'Invalid ticket category selected.',
+    'ticket_reply_not_allowed'  => 'You cannot reply to this ticket in its current state.',
+
     // ── Print (HS) ──────────────────────────────────────────────────────────
     'print_back_settlement'     => '← Back to Settlement',
     'print_save_hint'           => 'Use "Save as PDF" in the print dialog to download a PDF file',
@@ -302,5 +411,16 @@ return [
     'print_cr_full'             => 'CR: :cr',
     'print_back_detail'         => '← Back to Details',
     'print_back_btn'            => 'Print',
+
+    // ── Email on Delegate Profile (Batch 7) ───────────────────────────────
+    'email_update_heading'        => 'Email Address',
+    'email_update_label'          => 'Email Address',
+    'email_update_ph'             => 'example@email.com',
+    'email_update_save'           => 'Save Email',
+    'email_update_success'        => 'Email address updated successfully.',
+    'email_no_address'            => 'No email registered — add one to receive notifications.',
+    'val_email_invalid'           => 'The email address is not valid.',
+    'val_email_max'               => 'The email address is too long.',
+    'val_email_taken'             => 'This email address is already registered to another delegate.',
 
 ];

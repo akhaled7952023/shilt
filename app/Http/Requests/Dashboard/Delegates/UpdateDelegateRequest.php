@@ -42,6 +42,7 @@ class UpdateDelegateRequest extends FormRequest
                 'max:20',
                 Rule::unique('delegates', 'hungerstation_rider_id')->ignore($delegate),
             ]),
+            'email'                  => ['nullable', 'email', 'max:255', Rule::unique('delegates', 'email')->ignore($delegate)],
             'bank_name'              => ['nullable', 'string', 'max:150'],
             'iban'                   => ['nullable', 'string', 'max:34'],
             'profile_photo'          => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:5120'],

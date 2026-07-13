@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
 
 
+if (! function_exists('buildSitemap')) {
 function buildSitemap(string $locale)
 {
     $base = rtrim(config('app.url'), '/');
@@ -35,6 +36,7 @@ function buildSitemap(string $locale)
 
     return $xml->asXML();
 }
+} // end if (! function_exists('buildSitemap'))
 
 
 

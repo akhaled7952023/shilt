@@ -7,6 +7,7 @@ use App\Models\HungerStationFtrSettlement;
 use App\Models\ChefzDelegateSettlement;
 use App\Models\MonthlyPeriod;
 use App\Models\SystemSetting;
+use App\Services\Portal\SettlementViewTracker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -64,6 +65,11 @@ class DelegateSettlementController extends Controller
             ->where('monthly_period_id', $period->id)
             ->with(['deductions'])
             ->firstOrFail();
+
+        // P3-006 / P4-008: track first-view and notify admins
+        try {
+            app(SettlementViewTracker::class)->record($settlement, $delegate, $period);
+        } catch (\Throwable) {}
 
         $companyName = (App::isLocale('en') ? SystemSetting::get('company_name_en') : null)
             ?? SystemSetting::get('company_name_ar')

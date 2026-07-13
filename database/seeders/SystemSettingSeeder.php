@@ -120,6 +120,14 @@ class SystemSettingSeeder extends Seeder
                 'is_public'   => 1,
             ],
             [
+                'key'         => 'notification_admin_email',
+                'value'       => '',
+                'type'        => 'string',
+                'description' => 'البريد الإلكتروني للمشرف الذي يستقبل إشعارات النظام (تذاكر، تسويات، منتهيات الصلاحية، ...)',
+                'group'       => 'company',
+                'is_public'   => 0,
+            ],
+            [
                 'key'         => 'report_header_ar',
                 'value'       => 'تقرير المندوب',
                 'type'        => 'string',

@@ -7,4 +7,5 @@ return [
     'monthly-periods' => 'Manage Monthly Periods',
     'master-data'     => 'Manage Master Data',
     'reports'         => 'View Reports',
+    'support'         => 'Manage Support Center',
 ];

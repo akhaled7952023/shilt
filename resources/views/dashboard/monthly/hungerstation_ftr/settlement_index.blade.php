@@ -32,6 +32,8 @@
                 @endif
             @endforeach
 
+            @include('dashboard.monthly.hungerstation_ftr._pending_entries_banner')
+
             {{-- Batch info --}}
             @if ($activeBatch)
                 <div class="card mb-2" style="border-right:4px solid #4e73df;">

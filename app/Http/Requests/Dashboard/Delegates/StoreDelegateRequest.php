@@ -41,6 +41,7 @@ class StoreDelegateRequest extends FormRequest
                 'max:20',
                 Rule::unique('delegates', 'hungerstation_rider_id'),
             ]),
+            'email'                   => ['nullable', 'email', 'max:255', Rule::unique('delegates', 'email')],
             'bank_name'               => ['nullable', 'string', 'max:150'],
             'iban'                    => ['nullable', 'string', 'max:34'],
             'profile_photo'           => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:5120'],

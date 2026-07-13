@@ -70,12 +70,16 @@
             </li> --}}
 
                      <li class="dropdown dropdown-notification nav-item">
-                         <a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i
-                                 class="ficon ft-bell"></i>
-
-                             {{-- <span id="message-count"
-                                 class="badge badge-pill badge-default badge-danger badge-up badge-glow">{{ $countMessages }}</span> --}}
-
+                         <a class="nav-link nav-link-label"
+                            href="{{ route('dashboard.support.notifications.inbox') }}"
+                            title="الإشعارات">
+                             <i class="ficon ft-bell"></i>
+                             @if(!empty($unreadSupportCount) && $unreadSupportCount > 0)
+                                 <span class="badge badge-pill badge-danger badge-up badge-glow"
+                                       style="font-size:9px; padding:3px 5px;">
+                                     {{ $unreadSupportCount > 99 ? '99+' : $unreadSupportCount }}
+                                 </span>
+                             @endif
                          </a>
                          <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                              <li class="dropdown-menu-header">

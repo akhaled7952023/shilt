@@ -468,8 +468,10 @@ class ExecutiveDashboardController extends Controller
 
     private function buildPlatformCompare(?object $hsS, ?object $czO, ?object $czS, bool $inclHs, bool $inclCz): array
     {
-        // FTR: HS revenue = basic_payment (gross_fees in the hsS aggregate)
+        // HS revenue  = basic_payment (FTR model; gross_fees alias in hsS aggregate)
+        // Chefz revenue = company_share_amount (what the company keeps, not total delivery fees)
         $hsRev = $inclHs && $hsS ? round((float) $hsS->gross_fees, 2) : 0;
+        $czRev = $inclCz && $czS ? round((float) $czS->company_share, 2) : 0;
         return [
             'hs' => [
                 'orders'  => $inclHs ? (int)   ($hsS->total_orders ?? 0) : 0,
@@ -478,7 +480,7 @@ class ExecutiveDashboardController extends Controller
             ],
             'cz' => [
                 'orders'  => $inclCz ? (int)   ($czO->total_orders ?? 0) : 0,
-                'revenue' => $inclCz ? round((float) ($czS->gross_fees ?? 0), 2) : 0,
+                'revenue' => $czRev,
                 'salary'  => $inclCz ? round((float) ($czS->net_salaries ?? 0), 2) : 0,
             ],
         ];

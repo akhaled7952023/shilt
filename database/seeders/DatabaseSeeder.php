@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             WarningTypeSeeder::class,
             LeaveTypeSeeder::class,
             SystemSettingSeeder::class,
+            SlaPolicySeeder::class,
+            Phase3SupportSettingSeeder::class,
         ]);
     }
 }

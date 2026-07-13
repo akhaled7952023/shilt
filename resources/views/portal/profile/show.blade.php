@@ -291,6 +291,52 @@
             </div>
         </div>
 
+        {{-- Email address --}}
+        <div class="section-header">{{ __('portal.email_update_heading') }}</div>
+        <div class="p-card mb-4">
+            <div style="padding:18px 18px 4px;">
+
+                @if(session('email_success'))
+                    <div class="portal-alert" style="background:#dcfce7;color:#16a34a;margin-bottom:14px;">
+                        <i class="la la-check-circle" style="font-size:18px;"></i>
+                        {{ session('email_success') }}
+                    </div>
+                @endif
+
+                @if($errors->has('email'))
+                    <div class="portal-alert" style="background:#fee2e2;color:#dc2626;margin-bottom:14px;">
+                        <i class="la la-times-circle" style="font-size:18px;"></i>
+                        {{ $errors->first('email') }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('portal.profile.email') }}">
+                    @csrf
+                    <div style="margin-bottom:14px;">
+                        <label style="display:block;font-size:13px;font-weight:600;
+                                      color:#374151;margin-bottom:7px;">
+                            {{ __('portal.email_update_label') }}
+                        </label>
+                        <input type="email" name="email"
+                               class="portal-input {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                               value="{{ old('email', $delegate->email) }}"
+                               placeholder="{{ __('portal.email_update_ph') }}"
+                               dir="ltr" style="text-align:left;">
+                    </div>
+                    @if(!$delegate->email)
+                        <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">
+                            <i class="la la-info-circle" style="{{ app()->getLocale() === 'ar' ? 'margin-left:4px;' : 'margin-right:4px;' }}"></i>
+                            {{ __('portal.email_no_address') }}
+                        </p>
+                    @endif
+                    <button type="submit" class="portal-btn portal-btn-primary">
+                        <i class="la la-save" style="font-size:17px;{{ app()->getLocale() === 'ar' ? 'margin-left:6px;' : 'margin-right:6px;' }}"></i>
+                        {{ __('portal.email_update_save') }}
+                    </button>
+                </form>
+            </div>
+        </div>
+
         {{-- Logout --}}
         <div class="p-card" style="overflow:visible;">
             <div style="padding:16px 18px;">

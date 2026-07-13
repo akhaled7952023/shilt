@@ -40,14 +40,16 @@ Route::middleware(['web', 'portal.locale'])
 
                 Route::get('profile', [DelegateProfileController::class, 'show'])->name('profile');
                 Route::post('profile/password', [DelegateProfileController::class, 'changePassword'])->name('profile.password');
+                Route::post('profile/email', [DelegateProfileController::class, 'updateEmail'])->name('profile.email');
 
                 Route::get('settlements', [DelegateSettlementController::class, 'index'])->name('settlements.index');
                 Route::get('settlements/{period}/print', [DelegateSettlementController::class, 'printView'])->name('settlements.print');
                 Route::get('settlements/{period}', [DelegateSettlementController::class, 'show'])->name('settlements.show');
 
                 Route::get('notifications', [DelegateNotificationController::class, 'index'])->name('notifications.index');
+                Route::get('notifications/unread-count', [DelegateNotificationController::class, 'unreadCount'])->name('notifications.unread-count');
                 Route::post('notifications/read-all', [DelegateNotificationController::class, 'markAllRead'])->name('notifications.read-all');
-                Route::post('notifications/{notification}/read', [DelegateNotificationController::class, 'markRead'])->name('notifications.read');
+                Route::post('notifications/{id}/read', [DelegateNotificationController::class, 'markRead'])->name('notifications.read');
             });
         });
     });

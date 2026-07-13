@@ -81,6 +81,15 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
+                                            <label>البريد الإلكتروني <small class="text-muted">(اختياري — يُستخدم لإشعارات البريد)</small></label>
+                                            <input type="email" name="email" class="form-control border-primary"
+                                                   value="{{ old('email', $delegate->email) }}"
+                                                   placeholder="example@email.com">
+                                            @error('email') <span class="text-danger small">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
                                             <label>المدينة</label>
                                             <select name="city_id" id="city_select" class="form-control border-primary">
                                                 <option value=""></option>

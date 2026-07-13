@@ -14,6 +14,7 @@ use App\Http\Controllers\Dashboard\Chefz\ChefzImportController;
 use App\Http\Controllers\Dashboard\Chefz\ChefzSettlementController;
 use App\Http\Controllers\Dashboard\HungerStation\HungerStationFtrImportController;
 use App\Http\Controllers\Dashboard\HungerStation\HungerStationFtrSettlementController;
+use App\Http\Controllers\Dashboard\HungerStation\PendingEntryImportController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'auth', 'permission:monthly-periods'])
@@ -123,6 +124,10 @@ Route::middleware(['web', 'auth', 'permission:monthly-periods'])
                     ->name('adjustments.update');
                 Route::delete('/{settlement}/adjustments/{deduction}', [HungerStationFtrSettlementController::class, 'destroyAdjustment'])
                     ->name('adjustments.destroy');
+
+                // Pending financial entries → settlement import (Batch 5)
+                Route::post('/pending-entries/apply', [PendingEntryImportController::class, 'apply'])
+                    ->name('pending-entries.apply');
 
                 // Legacy aliases — keep old URLs functional (bookmarks, cached links)
                 Route::post('/{settlement}/deductions', [HungerStationFtrSettlementController::class, 'storeDeduction'])

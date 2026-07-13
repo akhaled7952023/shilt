@@ -7,6 +7,7 @@ use App\Models\HungerStationFtrDelegateDeduction;
 use App\Models\HungerStationFtrImportBatch;
 use App\Models\HungerStationFtrSettlement;
 use App\Models\MonthlyPeriod;
+use App\Services\Support\PendingEntryImportService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,6 +16,10 @@ use Illuminate\View\View;
 
 class HungerStationFtrSettlementController extends Controller
 {
+    public function __construct(
+        private readonly PendingEntryImportService $pendingImportService,
+    ) {}
+
     public function index(MonthlyPeriod $period): View
     {
         $settlements = HungerStationFtrSettlement::where('monthly_period_id', $period->id)
@@ -40,8 +45,13 @@ class HungerStationFtrSettlementController extends Controller
             ->latest()
             ->first();
 
+        $pendingPreview = ['total' => 0, 'importable' => 0, 'skipped' => 0, 'total_amount' => 0.0, 'entries' => collect()];
+        try {
+            $pendingPreview = $this->pendingImportService->preview($period);
+        } catch (\Throwable) {}
+
         return view('dashboard.monthly.hungerstation_ftr.settlement_index',
-            compact('period', 'settlements', 'totals', 'activeBatch'));
+            compact('period', 'settlements', 'totals', 'activeBatch', 'pendingPreview'));
     }
 
     public function show(MonthlyPeriod $period, HungerStationFtrSettlement $settlement): View

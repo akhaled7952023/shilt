@@ -116,12 +116,14 @@
             font-size: 14px;
             font-weight: 700;
             text-decoration: none;
-            max-width: 60%;
+            /* Take all available space, never overflow into actions */
+            flex: 1 1 0;
+            min-width: 0;
             overflow: hidden;
         }
 
         @media (min-width: 768px) {
-            .portal-brand { color: var(--text); max-width: 220px; }
+            .portal-brand { color: var(--text); max-width: 320px; flex: 0 0 auto; }
         }
 
         .portal-brand-icon {
@@ -144,6 +146,13 @@
 
         .portal-header-actions {
             display: flex; align-items: center; gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* On mobile, hide lang-btn text labels — show flags only */
+        @media (max-width: 767px) {
+            .lang-btn span:not(.lang-flag) { display: none; }
+            .lang-btn { padding: 5px 8px; }
         }
 
         .portal-header-delegate {
@@ -725,9 +734,16 @@
     $authDelegate = auth('delegate')->user();
     $fallback     = app()->getLocale() === 'en' ? 'D' : 'م';
     $initials     = $authDelegate ? mb_substr($authDelegate->name ?? $fallback, 0, 1) : $fallback;
-    $unreadNotifs = $authDelegate
-        ? \App\Models\DelegateNotification::where('delegate_id', $authDelegate->id)->whereNull('read_at')->count()
-        : 0;
+    $unreadNotifs = 0;
+    if ($authDelegate) {
+        $unreadNotifs = \App\Models\DelegateNotification::where('delegate_id', $authDelegate->id)
+                ->whereNull('read_at')->count()
+            + \Illuminate\Support\Facades\DB::table('notifications')
+                ->where('recipient_type', 'delegate')
+                ->where('recipient_id', $authDelegate->id)
+                ->whereNull('read_at')
+                ->count();
+    }
 @endphp
 <div class="portal-wrapper">
 
@@ -753,6 +769,20 @@
                 </a>
             </div>
             <span class="portal-header-delegate">{{ $authDelegate?->name ?? '' }}</span>
+            {{-- P6-006: Bell button — visible on mobile header only (sidebar shows it on desktop) --}}
+            @auth('delegate')
+            <a href="{{ route('portal.notifications.index') }}"
+               class="portal-logout-btn d-md-none"
+               title="{{ __('portal.nav_notifications') }}"
+               style="position:relative;">
+                <i class="la la-bell"></i>
+                @if($unreadNotifs > 0)
+                    <span style="position:absolute;top:2px;{{ $isRtl ? 'left:2px;' : 'right:2px;' }}
+                                 width:8px;height:8px;border-radius:50%;
+                                 background:#ef4444;display:block;"></span>
+                @endif
+            </a>
+            @endauth
             <a href="{{ route('portal.profile') }}" class="portal-avatar">
                 @if($authDelegate?->profile_photo)
                     <img src="{{ \Illuminate\Support\Facades\Storage::url($authDelegate->profile_photo) }}" alt="">
@@ -803,6 +833,12 @@
            class="sidebar-nav-item {{ request()->routeIs('portal.profile') ? 'active' : '' }}">
             <i class="la la-user"></i>
             <span>{{ __('portal.nav_profile') }}</span>
+        </a>
+
+        <a href="{{ route('portal.support.tickets.index') }}"
+           class="sidebar-nav-item {{ request()->routeIs('portal.support.*') ? 'active' : '' }}">
+            <i class="la la-life-ring"></i>
+            <span>{{ __('portal.nav_support') }}</span>
         </a>
 
         <a href="{{ route('portal.notifications.index') }}"
@@ -871,6 +907,10 @@
         <a href="{{ route('portal.profile') }}"
            class="portal-nav-item {{ request()->routeIs('portal.profile') ? 'active' : '' }}">
             <i class="la la-user"></i><span>{{ __('portal.nav_profile_short') }}</span>
+        </a>
+        <a href="{{ route('portal.support.tickets.index') }}"
+           class="portal-nav-item {{ request()->routeIs('portal.support.*') ? 'active' : '' }}">
+            <i class="la la-life-ring"></i><span>{{ __('portal.nav_support_short') }}</span>
         </a>
         <a href="{{ route('portal.notifications.index') }}"
            class="portal-nav-item {{ request()->routeIs('portal.notifications.*') ? 'active' : '' }}"

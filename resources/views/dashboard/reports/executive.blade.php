@@ -317,7 +317,8 @@
     @php
     $kpiCommon = [
         ['icon'=>'🛒','lbl'=>'إجمالي الطلبات',       'val'=>number_format($kpis['totalOrders']),      'sub'=>'طلب توصيل','color'=>'#6366f1','bg'=>'rgba(99,102,241,.1)'],
-        ['icon'=>'💰','lbl'=>'رسوم التوصيل',          'val'=>number_format($kpis['grossFees'],0),       'sub'=>'ريال سعودي','color'=>'#0d9488','bg'=>'rgba(13,148,136,.1)'],
+        ['icon'=>'💰','lbl'=>$isHs && !$isCz ? 'الدفعة الأساسية (FTR)' : ($isCz && !$isHs ? 'رسوم التوصيل' : 'إجمالي الإيرادات'),
+                    'val'=>number_format($kpis['grossFees'],0), 'sub'=>'ريال سعودي','color'=>'#0d9488','bg'=>'rgba(13,148,136,.1)'],
         ['icon'=>'👥','lbl'=>'رواتب المناديب',        'val'=>number_format($kpis['totalSalaries'],0),   'sub'=>'ريال','color'=>'#7c3aed','bg'=>'rgba(124,58,237,.1)'],
         ['icon'=>$kpis['netProfit']>=0?'✓':'✗',
          'lbl'=>'صافي الربح',
@@ -645,7 +646,7 @@
                         <th>الفترة</th>
                         @if($isHs)<th>المنطقة</th>@endif
                         <th><a href="{{ request()->fullUrlWithQuery(['sort'=>'orders_desc','page'=>1]) }}">الطلبات</a></th>
-                        <th><a href="{{ request()->fullUrlWithQuery(['sort'=>'fees_desc','page'=>1]) }}">رسوم التوصيل</a></th>
+                        <th><a href="{{ request()->fullUrlWithQuery(['sort'=>'fees_desc','page'=>1]) }}">{{ $isHs && !$isCz ? 'الدفعة الأساسية' : 'رسوم التوصيل' }}</a></th>
                         @if($isHs)<th>خصومات المنصة</th>@endif
                         @if($isHs)<th>تعويضات</th>@endif
                         @if($isCz)<th>ضريبة</th>@endif
