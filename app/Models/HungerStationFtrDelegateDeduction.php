@@ -16,6 +16,7 @@ class HungerStationFtrDelegateDeduction extends Model
         'traffic_violation' => 'مخالفة مرورية',
         'company_penalty'   => 'غرامة داخلية',
         'loan'              => 'مبالغ سابقة',
+        'target_miss'       => 'عدم الوصول للتارجت',
     ];
 
     // مزايا الشركة (تُضاف للراتب) — القائمة المعتمدة فقط
@@ -41,6 +42,7 @@ class HungerStationFtrDelegateDeduction extends Model
         'transport_allowance' => 'إكرامية',
         'food_allowance'      => 'مستحقات',
         'other_benefit'       => 'منح الشركة',
+        'target_miss'         => 'عدم الوصول للتارجت',
     ];
 
     protected $fillable = [

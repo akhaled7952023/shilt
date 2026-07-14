@@ -215,6 +215,7 @@ return [
     'ded_hs_food_allowance'         => 'Entitlements',
     'ded_hs_other_benefit'          => 'Company Grant',
     'ded_hs_other'                  => 'Other',
+    'ded_hs_target_miss'            => 'Target Not Achieved',
 
     // ── Chefz deduction type labels ─────────────────────────────────────────
     'ded_cz_fuel'                   => 'Fuel Deduction',

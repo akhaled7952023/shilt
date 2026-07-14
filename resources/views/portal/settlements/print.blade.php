@@ -531,6 +531,13 @@ body {
                             <td>{{ $ded->getTypeLabel() }}</td>
                             <td>{{ number_format((float)$ded->amount, 2) }}</td>
                         </tr>
+                        @if(!empty($ded->notes))
+                            <tr>
+                                <td colspan="2" style="font-size:10px;color:#64748b;direction:rtl;text-align:right;padding-top:0;padding-bottom:6px;padding-right:8px;">
+                                    <span style="font-weight:600;">سبب الخصم:</span> {{ $ded->notes }}
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                     @if($deductionEntries->isEmpty() && (float)$settlement->total_platform_penalties == 0 && (float)$settlement->rider_balance == 0)
                         <tr>

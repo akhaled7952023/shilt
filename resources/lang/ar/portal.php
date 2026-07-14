@@ -215,6 +215,7 @@ return [
     'ded_hs_food_allowance'         => 'مستحقات',
     'ded_hs_other_benefit'          => 'منح الشركة',
     'ded_hs_other'                  => 'أخرى',
+    'ded_hs_target_miss'            => 'عدم الوصول للتارجت',
 
     // ── Chefz deduction type labels ─────────────────────────────────────────
     'ded_cz_fuel'                   => 'خصم البنزين',
